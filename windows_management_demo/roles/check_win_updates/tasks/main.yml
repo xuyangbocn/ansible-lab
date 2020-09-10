@@ -7,14 +7,14 @@
 
 - name: Clean Up Reports Directory if it exists
   file:
-    path: reports
+    path: /tmp/reports
     state: absent
   delegate_to: localhost
   run_once: yes
 
 - name: Create Reports Directory
   file:
-    path: reports
+    path: /tmp/reports
     state: directory
     mode: 0755
   delegate_to: localhost
@@ -23,33 +23,33 @@
 - name: Template Rendering
   template:
     src: individual_vm_report.html.j2
-    dest: "reports/{{ inventory_hostname }}_interim_report.html"
+    dest: "/tmp/reports/{{ inventory_hostname }}_interim_report.html"
   delegate_to: localhost
 
 - name: Create Interim Report
   template:
     src: consolidated_vms_report.html.j2
-    dest: "reports/Consolidated_VMs_Report.html"
+    dest: "/tmp/reports/Consolidated_VMs_Report.html"
   delegate_to: localhost
   run_once: yes
 
 - name: Consolidate Interim Report
   assemble:
-    src: reports/
-    dest: reports/Consolidated_VMs_Report.html
+    src: /tmp/reports/
+    dest: /tmp/reports/Consolidated_VMs_Report.html
   delegate_to: localhost
   run_once: yes
 
 - name: Generate Remaining Portion of Report
   template:
     src: consolidated_vms_report_last_block.html.j2
-    dest: "reports/consolidated_vms_report_last_block.html"
+    dest: "/tmp/reports/consolidated_vms_report_last_block.html"
   delegate_to: localhost
   run_once: yes
 
 - name: Get the List of Interim Reports
   find:
-    paths: reports/
+    paths: /tmp/reports/
     patterns: '*_interim_report.html'
   register: interim_reports_to_delete
   delegate_to: localhost
@@ -65,7 +65,14 @@
 
 - name: Consolidate Final Report
   assemble:
-    src: reports/
-    dest: reports/Consolidated_VMs_Report.html
+    src: /tmp/reports/
+    dest: /tmp/reports/Consolidated_VMs_Report.html
+  delegate_to: localhost
+  run_once: yes
+
+- name: Final Clean Up
+  file:
+    path: /tmp/reports/consolidated_vms_report_last_block.html
+    state: absent
   delegate_to: localhost
   run_once: yes
