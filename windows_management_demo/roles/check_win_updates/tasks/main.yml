@@ -23,7 +23,7 @@
 - name: Template Rendering
   template:
     src: individual_vm_report.html.j2
-    dest: "/tmp/reports/{{ inventory_hostname }}_interim_report.html"
+    dest: "/tmp/reports/D_{{ inventory_hostname }}_interim_report.html"
   delegate_to: localhost
 
 - name: Create Interim Report
@@ -43,7 +43,7 @@
 - name: Generate Remaining Portion of Report
   template:
     src: consolidated_vms_report_last_block.html.j2
-    dest: "/tmp/reports/consolidated_vms_report_last_block.html"
+    dest: "/tmp/reports/Z_consolidated_vms_report_last_block.html"
   delegate_to: localhost
   run_once: yes
 
@@ -72,7 +72,7 @@
 
 - name: Final Clean Up
   file:
-    path: /tmp/reports/consolidated_vms_report_last_block.html
+    path: /tmp/reports/Z_consolidated_vms_report_last_block.html
     state: absent
   delegate_to: localhost
   run_once: yes
