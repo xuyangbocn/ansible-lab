@@ -1,0 +1,15 @@
+---
+- name: CIS Amazon Web Services Foundations
+  hosts: "{{ vm_inventory_group }}"
+  gather_facts: false
+
+  tasks:
+    - name: Generate Credential Report
+      command: aws iam generate-credential-report 
+      ignore_errors: true
+
+    - name: '1.1 Avoid the use of the "root" account' 
+      shell: aws iam get-credential-report --query 'Content' --output text | base64 -d | cut -d, -f1,5,11,16 | grep -B1 '<root_account>'
+
+    - name: '1.2 Ensure multi-factor authentication (MFA) is enabled for all IAM users that have a console password'
+      shell: aws iam get-credential-report --query 'Content' --output text | base64 -d | cut -d, -f1,4,8
