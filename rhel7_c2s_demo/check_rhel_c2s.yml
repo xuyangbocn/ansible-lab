@@ -1,6 +1,6 @@
 ---
-- hosts: localhost
-  connection: local
-  become: true
+- name: Check RHEL7 against C2S
+  hosts: "{{ vm_inventory_group }}"
+  become: yes
   roles:
     - ansible-role-rhel7-c2s
