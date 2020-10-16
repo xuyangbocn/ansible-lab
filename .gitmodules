@@ -1,0 +1,3 @@
+[submodule "rhel_c2s_demo/roles/ansible-role-rhel7-c2s"]
+	path = rhel_c2s_demo/roles/ansible-role-rhel7-c2s
+	url = https://github.com/RedHatOfficial/ansible-role-rhel7-c2s.git
